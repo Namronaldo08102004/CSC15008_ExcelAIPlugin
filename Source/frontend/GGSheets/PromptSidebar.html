@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 15px;
+      max-width: 400px;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 10px;
+    }
+    input[type="number"]::-webkit-inner-spin-button {
+      opacity: 1;
+    }
+    input[type="number"] {
+      width: 100%;
+      padding: 5px;
+      font-size: 14px;
+    }
+    textarea, select {
+      width: 100%;
+      padding: 6px;
+      font-size: 14px;
+    }
+    .flex {
+      display: flex;
+      gap: 10px;
+    }
+    .toggle-button {
+      padding: 5px 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .toggle-button.active {
+      background-color: #007bff;
+      color: white;
+    }
+    .row-options {
+      margin-top: 8px;
+    }
+    .column-name {
+      display: inline-block;
+      margin: 2px 5px 2px 0;
+      color: #007bff;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    #run-button {
+      width: 100%;
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .start-row-wrapper {
+      margin-top: 15px;
+    }
+    .start-row-label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+    .start-row-toggles {
+      display: flex;
+      gap: 10px;
+    }
+    #columnSuggestions {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h3>Prompt Runner</h3>
+
+  <label>Header row:</label>
+  <input type="number" id="headerRow" value="1" min="0" oninput="onHeaderChange()" onkeydown="return false;">
+
+  <label>Prompt Template:</label>
+  <textarea id="prompt" rows="4" placeholder="E.g., Generate summary for {{Description}}" oninput="onHeaderChange()"></textarea>
+  <div id="columnSuggestions"></div>
+
+  <label>Put results in column:</label>
+  <select id="outputColumn"></select>
+
+  <label>Model:</label>
+  <select id="model"></select>
+
+  <label>Temperature: <span id="tempVal">0.7</span></label>
+  <input type="range" id="temperature" min="0" max="1" step="0.01" value="0.7" oninput="document.getElementById('tempVal').textContent=this.value">
+
+  <div class="start-row-wrapper">
+    <span class="start-row-label">Start from row:</span>
+    <div class="start-row-toggles">
+      <span class="toggle-button active" id="autoToggle" onclick="setMode('Auto')">Auto</span>
+      <span class="toggle-button" id="fixedToggle" onclick="setMode('Fixed')">Fixed</span>
+    </div>
+  </div>
+
+  <div id="autoOptions">
+    <div class="row-options">
+      <label><input type="radio" name="runMode" value="number" checked onchange="updateRunButton()"> 
+        <input type="number" id="numRows" min="1" value="3" oninput="updateRunButton()" onkeydown="return false;" style="width:60px"> rows
+      </label><br>
+      <label><input type="radio" name="runMode" value="all" onchange="updateRunButton()"> Run all rows</label>
+    </div>
+  </div>
+
+  <div id="fixedOptions" style="display:none;">
+    <div class="flex">
+      <div>
+        <label>From row:</label>
+        <input type="number" id="fromRow" oninput="syncRows()" onkeydown="return false;">
+      </div>
+      <div>
+        <label>To row:</label>
+        <input type="number" id="toRow" oninput="syncRows()" onkeydown="return false;">
+      </div>
+    </div>
+  </div>
+
+  <button id="run-button" onclick="submitPrompt()">Run</button>
+
+  <script>
+    let x = 1, y = 2, mode = "Auto";
+
+    function setMode(selectedMode) {
+      mode = selectedMode;
+      document.getElementById("autoToggle").classList.toggle("active", mode === "Auto");
+      document.getElementById("fixedToggle").classList.toggle("active", mode === "Fixed");
+      document.getElementById("autoOptions").style.display = mode === "Auto" ? "block" : "none";
+      document.getElementById("fixedOptions").style.display = mode === "Fixed" ? "block" : "none";
+      updateRunButton();
+    }
+
+    function syncRows() {
+      const from = parseInt(document.getElementById("fromRow").value) || y;
+      let to = parseInt(document.getElementById("toRow").value) || (y + x - 1);
+      if (from > to) {
+        document.getElementById("toRow").value = from;
+      } else if (to < from) {
+        document.getElementById("fromRow").value = to;
+      }
+      updateRunButton();
+    }
+
+    function updateRunButton() {
+      let text = "";
+      if (mode === "Auto") {
+        const runMode = document.querySelector("input[name='runMode']:checked").value;
+        const num = parseInt(document.getElementById("numRows").value) || 1;
+        if (runMode === "all") text = `Run all rows`;
+        else text = `Run ${num} rows`;
+      } else {
+        const from = parseInt(document.getElementById("fromRow").value);
+        const to = parseInt(document.getElementById("toRow").value);
+        text = `Run ${to - from + 1} rows`;
+      }
+      document.getElementById("run-button").textContent = text;
+    }
+
+    function insertIntoPrompt(colName) {
+      const textarea = document.getElementById("prompt");
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const text = textarea.value;
+      const insert = `{{${colName}}}`;
+      textarea.value = text.slice(0, start) + insert + text.slice(end);
+      textarea.focus();
+      textarea.selectionStart = textarea.selectionEnd = start + insert.length;
+    }
+
+    function getHeaderCellValue(row, col) {
+      google.script.run.withSuccessHandler(value => {
+        if (value) insertIntoPrompt(value);
+      }).getCellValue(row, col);
+    }
+
+    function onHeaderChange() {
+      updateOutputColumnOptions();
+      refreshPromptStats();
+    }
+
+    function updateOutputColumnOptions() {
+      const headerRow = parseInt(document.getElementById("headerRow").value);
+      google.script.run.withSuccessHandler(columns => {
+        const select = document.getElementById("outputColumn");
+        select.innerHTML = "";
+        columns.forEach(c => {
+          const opt = document.createElement("option");
+          opt.value = c;
+          opt.textContent = c;
+          select.appendChild(opt);
+        });
+      }).getHeaderValues(headerRow);
+    }
+
+    function refreshPromptStats() {
+      const prompt = document.getElementById("prompt").value;
+      const headerRow = parseInt(document.getElementById("headerRow").value);
+      
+      google.script.run.withSuccessHandler(info => {
+        x = info.x;
+        y = info.y;
+
+        const numRowsInput = document.getElementById("numRows");
+        numRowsInput.max = x;
+        numRowsInput.value = Math.min(x, parseInt(numRowsInput.value) || 1);
+
+        document.getElementById("fromRow").value = y;
+        document.getElementById("fromRow").min = y;
+        document.getElementById("fromRow").max = y + x - 1;
+
+        document.getElementById("toRow").value = y + x - 1;
+        document.getElementById("toRow").min = y;
+        document.getElementById("toRow").max = y + x - 1;
+
+        updateRunButton();
+      }).getPromptStats(prompt, headerRow);
+    }
+
+    function submitPrompt() {
+      const runMode = document.querySelector("input[name='runMode']:checked")?.value;
+      const numRows = parseInt(document.getElementById("numRows").value);
+
+      const data = {
+        prompt: document.getElementById("prompt").value,
+        model: document.getElementById("model").value,
+        temperature: parseFloat(document.getElementById("temperature").value),
+        outputColumn: document.getElementById("outputColumn").value,
+        headerRow: parseInt(document.getElementById("headerRow").value),
+        mode: mode,
+        numRows: runMode === "all" ? x : numRows,
+        fromRow: parseInt(document.getElementById("fromRow").value),
+        toRow: parseInt(document.getElementById("toRow").value),
+        runAll: runMode === "all"
+      };
+      google.script.run.runPrompt(data);
+    }
+
+    function loadModels() {
+      google.script.run.withSuccessHandler(models => {
+        const select = document.getElementById("model");
+        models.forEach(m => {
+          const opt = document.createElement("option");
+          opt.value = m;
+          opt.textContent = m;
+          select.appendChild(opt);
+        });
+      }).getAvailableModels();
+    }
+
+    window.onload = function () {
+      loadModels();
+      onHeaderChange();
+
+      google.script.host.editor.setSelectionHandler(range => {
+        const headerRow = parseInt(document.getElementById("headerRow").value);
+        const startRow = range.getRow();
+        const startCol = range.getColumn();
+        if (startRow !== headerRow) return;
+        getHeaderCellValue(startRow, startCol);
+      });
+    };
+  </script>
+</body>
+</html>

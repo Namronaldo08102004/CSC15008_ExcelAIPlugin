@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <base target="_top">
+    <style>
+        body {
+            font-family: 'Google Sans', Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            background-color: #fafafa;
+        }
+
+        .container {
+            display: flex;
+            gap: 12px;
+            padding: 10px;
+            flex-grow: 1;
+        }
+
+        .text-area {
+            flex: 1;
+            padding: 10px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            background-color: #ffffff;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            height: calc(100% - 20px);
+        }
+
+        textarea {
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 14px;
+            line-height: 1.5;
+            padding: 8px;
+            border-radius: 4px;
+            background-color: #fafafa;
+            color: #333;
+        }
+
+        .buttons {
+            text-align: center;
+            padding: 15px;
+        }
+
+        .buttons button {
+            padding: 10px 16px;
+            margin: 0 8px;
+            background-color: #0078D7;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s ease;
+        }
+
+        .buttons button:hover {
+            background-color: #005bb5;
+        }
+
+        .translation-info {
+            background-color: #f9f9f9;
+            padding: 12px;
+            border-radius: 8px;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.8;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border: 1px solid #ccc;
+        }
+
+        .translation-info b {
+            display: inline-block;
+            width: 160px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <!-- Thông tin dịch -->
+    <div class="translation-info">
+        <div><b>Source Language:</b> <?= sourceLang ?></div>
+        <div><b>Target Language:</b> <?= targetLang ?></div>
+        <div><b>Model:</b> <?= modelName ?></div>
+        <div><b>Temperature:</b> <?= temperature ?></div>
+    </div>
+
+    <!-- Vùng chứa nội dung -->
+    <div class="container">
+        <div class="text-area">
+            <h3>Original Text</h3>
+            <textarea id="originalText" readonly><?= originalText ?></textarea>
+        </div>
+        <div class="text-area">
+            <h3>Translated Text</h3>
+            <textarea id="translatedText"><?= translatedText ?></textarea>
+        </div>
+    </div>
+
+    <!-- Nút thao tác -->
+    <div class="buttons">
+        <button onclick="reTranslate()">Re-translate</button>
+        <button onclick="applyTranslation()">Accept</button>
+    </div>
+
+    <!-- Script xử lý -->
+    <script>
+        // Dịch lại nội dung
+        function reTranslate() {
+            let sourceLang = '<?= sourceLang ?>';
+            let targetLang = '<?= targetLang ?>';
+            let originalText = '<?= originalText ?>';
+            let modelName = '<?= modelName ?>';
+            let temperature = parseFloat('<?= temperature ?>');
+            
+            // 🚀 Gửi dữ liệu lên server để dịch lại
+            google.script.run
+                .withSuccessHandler(updateTranslatedText)
+                .reTranslate(sourceLang, targetLang, originalText, modelName, temperature);
+        }
+
+        // Cập nhật văn bản sau khi dịch lại
+        function updateTranslatedText(translated) {
+            document.getElementById('translatedText').value = translated;
+        }
+
+        // Chấp nhận bản dịch và đóng popup
+        function applyTranslation() {
+            const translatedText = document.getElementById('translatedText').value;
+            
+            google.script.run
+                .withSuccessHandler(() => {
+                    google.script.host.close(); // Đóng popup sau khi hoàn thành
+                })
+                .applyTranslation(translatedText);
+        }
+    </script>
+</body>
+</html>
