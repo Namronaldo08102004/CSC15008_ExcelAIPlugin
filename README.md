@@ -187,6 +187,96 @@ Within the **Prompt Sidebar**, users can select:
 
     - `Fixed`: Manually choose a start and end row (e.g., from row 2 to row 4).
 
+Below are detailed guidelines for the using of **Prompt Sidebar**
+
+- 📌 **Header Row**
+
+  - You can **only adjust the Header Row using up/down arrows**. Manual typing is disabled.
+
+  - **Header Row must be 0 or greater**. Negative values are not allowed.
+
+  - Rows marked as "Header" **must not be completely empty**. Blank rows are ignored.
+
+✏️ **Writing the Prompt**
+
+  - You can use variables like `{{ColumnName}}` to reference data from specific columns in each row.
+
+  - Each `{{Key}}` must match one of the actual column names from the selected Header Row(s).
+
+  - If you use **multiple** `{{Key}}` **variables**, the number of non-empty cells in all referenced columns **must be equal**.
+
+  - If a column header spans multiple columns (merged cells), we count **all non-empty cells in the entire merged range** when checking row count consistency.
+
+- 📤 **Output Column**
+
+  - The list of available output columns depends on the selected Header Row:
+
+    - If **Header Row = 0**: we show columns by default labels like A, B, C...
+
+      - If some columns are merged and contain data, the merged group is shown as e.g. (B, C).
+
+    - If **Header Row ≥ 1**: we use actual text in the header cells to label columns.
+
+- 🤖 **Model Name**
+
+  - Must be selected from the predefined list:
+
+    - `gemini-2.0-flash`
+
+    - `gemini-2.0-flash-lite`
+
+    - `gemini-1.5-flash`
+
+    - `gemini-1.5-flash-8b`
+
+- 🌡️ **Temperature**
+
+  - Adjustable using a slider between 0 and 1.
+
+  - Default value: 0.7
+
+- 🔁 **Running Mode**
+
+  - ✅ Auto Mode
+
+  - Let:
+
+    - `x` = **Number of non-empty rows** under the first column referenced in your prompt (e.g. `{{Description}}`)
+
+    - If multiple columns are referenced (e.g. `{{Title}}`, `{{Description}}`), `x` is the number of rows where **all referenced columns have values**.
+
+  - "Number of rows to run":
+
+    - Default: `1`
+
+    - Can only be changed via up/down arrows **within [1, x]**.
+
+    - If no `{{Key}}` is used, it defaults to `1` and cannot be changed.
+
+    - If **“Run all rows”** is checked, value is fixed to `x`.
+
+  - 📍 Fixed Mode
+
+  - Let:
+
+    - `y` = **First row (after headers)** that has a value in the referenced columns.
+
+    - `x` is defined as above.
+
+  - "From row":
+
+    - Default: `y`
+
+    - Can be adjusted between `y` and `y + x - 1`
+
+  - "To row":
+
+    - Default: `y + x - 1`
+
+    - Must be ≥ "From row"
+
+  - Both fields can only be adjusted with up/down arrows.
+
 #### 📝 GPT_SUMMARIZE Function
 
 You can use the built-in custom function `=GPT_SUMMARIZE(...)` to generate AI-powered summaries of any cell or range of cells within your Google Sheet. This is especially useful for condensing long texts, notes, or descriptions into more concise formats.
