@@ -109,7 +109,7 @@ To stop the backend server, press `CTRL + C` in the terminal.
 
 This section provides a demonstration of how the backend works in action. You will see how the FastAPI server processes translation requests and returns results.
 
-https://github.com/user-attachments/assets/8c7fe751-0fe2-4b7f-830c-e4b485d67ff
+https://github.com/user-attachments/assets/250655d0-208e-463e-a5f8-5a1622017921
 
 ## Google Sheets Add-on
 
