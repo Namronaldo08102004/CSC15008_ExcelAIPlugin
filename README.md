@@ -237,7 +237,7 @@ Below are detailed guidelines for the using of **Prompt Sidebar**
 
 🔁 **Running Mode**
 
-  - ✅ **Auto Mode**
+  ✅ **Auto Mode**
 
   - Let:
 
@@ -255,7 +255,7 @@ Below are detailed guidelines for the using of **Prompt Sidebar**
 
     - If **“Run all rows”** is checked, value is fixed to `x`.
 
-  - 📍 **Fixed Mode**
+  📍 **Fixed Mode**
 
   - Let:
 
