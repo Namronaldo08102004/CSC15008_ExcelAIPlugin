@@ -293,29 +293,29 @@ You can use the built-in custom function `=GPT_SUMMARIZE(...)` to generate AI-po
 
 - `format` (optional): A prompt that defines the desired output format. For example:
 
-    - "Bullet points"
+    - `Bullet points`
 
-    - "Short paragraph"
+    - `Short paragraph`
 
-    - "List of key ideas"
+    - `List of key ideas`
 
-    - "Summary in 3 sentences"
+    - `Summary in 3 sentences`
 
 - `temperature` (optional): A number between 0 and 1 that controls the creativity of the output.
 
-    - Lower values (e.g., 0.2) result in more focused and deterministic summaries.
+    - Lower values (e.g., `0.2`) result in more focused and deterministic summaries.
 
-    - Higher values (e.g., 0.8) make the output more creative and diverse.
+    - Higher values (e.g., `0.8`) make the output more creative and diverse.
 
 - `model` (optional): Specifies which AI model to use for summarization. You can choose from the following options:
 
-    - "gemini-2.0-flash"
+    - `gemini-2.0-flash`
 
-    - "gemini-2.0-flash-lite"
+    - `gemini-2.0-flash-lite`
 
-    - "gemini-1.5-flash"
+    - `gemini-1.5-flash`
 
-    - "gemini-1.5-flash-8b"
+    - `gemini-1.5-flash-8b`
 
 ### Demo
 
