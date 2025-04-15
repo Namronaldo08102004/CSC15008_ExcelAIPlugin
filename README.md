@@ -107,6 +107,8 @@ To stop the backend server, press `CTRL + C` in the terminal.
 
 ### Demo
 
+This section provides a demonstration of how the backend works in action. You will see how the FastAPI server processes translation requests and returns results.
+
 ## Google Sheets Add-on
 
 The **Google Sheets Add-on** is a tool I developed to integrate AI-powered functionalities - **translation, prompting, and summarization** - directly into Google Sheets. With this add-on, users can perform advanced language tasks on spreadsheet data without leaving the platform, streamlining their workflow and eliminating the need to switch between external tools or services.
@@ -224,5 +226,7 @@ You can use the built-in custom function `=GPT_SUMMARIZE(...)` to generate AI-po
     - "gemini-1.5-flash-8b"
 
 ### Demo
+
+This section demonstrates how the Google Sheets Add-on operates in practice. It shows how to select text, initiate the translation process, run custom prompts on spreadsheet data, and generate AI-powered summaries - all directly within your spreadsheet without leaving the platform.
 
 # [🏠 Back to top](#ai-powered-plugin-for-excel-processing-applications-)
