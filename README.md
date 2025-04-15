@@ -237,45 +237,45 @@ Below are detailed guidelines for the using of **Prompt Sidebar**
 
 🔁 **Running Mode**
 
-  ✅ **Auto Mode**
+  - ✅ **Auto Mode**
 
-  - Let:
+    - Let:
 
-    - `x` = **Number of non-empty rows** under the first column referenced in your prompt (e.g. `{{Description}}`)
+      - `x` = **Number of non-empty rows** under the first column referenced in your prompt (e.g. `{{Description}}`)
 
-    - If multiple columns are referenced (e.g. `{{Title}}`, `{{Description}}`), `x` is the number of rows where **all referenced columns have values**.
+      - If multiple columns are referenced (e.g. `{{Title}}`, `{{Description}}`), `x` is the number of rows where **all referenced columns have values**.
 
-  - "Number of rows to run":
+    - "Number of rows to run":
 
-    - Default: `1`
+      - Default: `1`
 
-    - Can only be changed via up/down arrows **within [1, x]**.
+      - Can only be changed via up/down arrows **within [1, x]**.
 
-    - If no `{{Key}}` is used, it defaults to `1` and cannot be changed.
+      - If no `{{Key}}` is used, it defaults to `1` and cannot be changed.
 
-    - If **“Run all rows”** is checked, value is fixed to `x`.
+      - If **“Run all rows”** is checked, value is fixed to `x`.
 
-  📍 **Fixed Mode**
+  - 📍 **Fixed Mode**
 
-  - Let:
+    - Let:
 
-    - `y` = **First row (after headers)** that has a value in the referenced columns.
+      - `y` = **First row (after headers)** that has a value in the referenced columns.
 
-    - `x` is defined as above.
+      - `x` is defined as above.
 
-  - "From row":
+    - "From row":
 
-    - Default: `y`
+      - Default: `y`
 
-    - Can be adjusted between `y` and `y + x - 1`
+      - Can be adjusted between `y` and `y + x - 1`
 
-  - "To row":
+    - "To row":
 
-    - Default: `y + x - 1`
+      - Default: `y + x - 1`
 
-    - Must be ≥ "From row"
+      - Must be ≥ "From row"
 
-  - Both fields can only be adjusted with up/down arrows.
+    - Both fields can only be adjusted with up/down arrows.
 
 #### 📝 GPT_SUMMARIZE Function
 
