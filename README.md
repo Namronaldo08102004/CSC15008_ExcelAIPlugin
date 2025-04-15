@@ -189,7 +189,7 @@ Within the **Prompt Sidebar**, users can select:
 
 Below are detailed guidelines for the using of **Prompt Sidebar**
 
-- 📌 **Header Row**
+📌 **Header Row**
 
   - You can **only adjust the Header Row using up/down arrows**. Manual typing is disabled.
 
@@ -207,7 +207,7 @@ Below are detailed guidelines for the using of **Prompt Sidebar**
 
   - If a column header spans multiple columns (merged cells), we count **all non-empty cells in the entire merged range** when checking row count consistency.
 
-- 📤 **Output Column**
+📤 **Output Column**
 
   - The list of available output columns depends on the selected Header Row:
 
@@ -217,7 +217,7 @@ Below are detailed guidelines for the using of **Prompt Sidebar**
 
     - If **Header Row ≥ 1**: we use actual text in the header cells to label columns.
 
-- 🤖 **Model Name**
+🤖 **Model Name**
 
   - Must be selected from the predefined list:
 
@@ -229,15 +229,15 @@ Below are detailed guidelines for the using of **Prompt Sidebar**
 
     - `gemini-1.5-flash-8b`
 
-- 🌡️ **Temperature**
+🌡️ **Temperature**
 
   - Adjustable using a slider between 0 and 1.
 
   - Default value: 0.7
 
-- 🔁 **Running Mode**
+🔁 **Running Mode**
 
-  - ✅ Auto Mode
+  - ✅ **Auto Mode**
 
   - Let:
 
@@ -255,7 +255,7 @@ Below are detailed guidelines for the using of **Prompt Sidebar**
 
     - If **“Run all rows”** is checked, value is fixed to `x`.
 
-  - 📍 Fixed Mode
+  - 📍 **Fixed Mode**
 
   - Let:
 
